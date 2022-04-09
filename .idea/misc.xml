@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="UsbSerialTest/src/main/res/layout/activity_data_config.xml" value="0.1203125" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_loopback_test.xml" value="0.335" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_loopback_test_separated.xml" value="0.3255208333333333" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_loopback_test_using_iom.xml" value="0.3255208333333333" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_loopback_test_using_iom_trd.xml" value="0.3255208333333333" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_loopback_test_using_two_threads.xml" value="0.335" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_main.xml" value="0.335" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_port_config.xml" value="0.15443840579710144" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_reading_test.xml" value="0.3255208333333333" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_reading_test_iom.xml" value="0.3255208333333333" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_receive_test.xml" value="0.1203125" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_receive_test_using_iom.xml" value="0.25" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_send_test.xml" value="0.15443840579710144" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_send_test_using_iom.xml" value="0.1203125" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_writing_test.xml" value="0.3255208333333333" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_writing_test_iom.xml" value="0.3255208333333333" />
+        <entry key="UsbSerialTest/src/main/res/layout/activity_writing_test_separated.xml" value="0.3255208333333333" />
+        <entry key="usbSerialExamples/src/main/res/layout/activity_main.xml" value="0.1203125" />
+        <entry key="usbSerialExamples/src/main/res/layout/device_list_header.xml" value="0.15443840579710144" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="androidx.annotation.Nullable" />
@@ -46,7 +71,7 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

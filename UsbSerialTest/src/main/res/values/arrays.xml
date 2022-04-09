@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="baudrate_names">
+        <item>4800</item>
+        <item>9600</item>
+        <item>19200</item>
+        <item>57600</item>
+        <item>115200</item>
+        <item>230400</item>
+        <item>460800</item>
+    </string-array>
+
+    <integer-array name="baudrate_vals">
+        <item>4800</item>
+        <item>9600</item>
+        <item>19200</item>
+        <item>57600</item>
+        <item>115200</item>
+        <item>230400</item>
+        <item>460800</item>
+    </integer-array>
+
+    <string-array name="databits_names">
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>16</item>
+    </string-array>
+
+    <integer-array name="databits_vals">
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>16</item>
+    </integer-array>
+
+    <string-array name="stopbits_names">
+        <item>1</item>
+        <item>1.5</item>
+        <item>2</item>
+    </string-array>
+
+    <integer-array name="stopbits_vals">
+        <item>1</item>
+        <item>3</item>
+        <item>2</item>
+    </integer-array>
+
+    <string-array name="paritytype_names">
+        <item>None</item>
+        <item>Odd</item>
+        <item>Even</item>
+        <item>Mark</item>
+        <item>Space</item>
+    </string-array>
+
+    <integer-array name="paritytype_vals">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </integer-array>
+</resources>
