@@ -197,7 +197,11 @@ public class PortConfig extends AppCompatActivity implements AdapterView.OnItemS
             UsbSerialDriver usbDriver = usbSerialProber.probeDevice(device);
             if (usbDriver != null) {
                 for (int i = 0; i < usbDriver.getPorts().size(); i++) {
-                    mPortsList.add(new PortInfo(device.getVendorId(), device.getProductId(), i, usbDriver.getClass().getSimpleName().replace("SerialDriver", "")));
+                    mPortsList.add(new PortInfo(device.getVendorId(),
+                                                device.getProductId(),
+                                                i,
+                                                usbDriver.getClass().getSimpleName().replace("SerialDriver", ""),
+                                                device.getSerialNumber()));
                 }
             }
         }
@@ -224,24 +228,28 @@ public class PortConfig extends AppCompatActivity implements AdapterView.OnItemS
         public int PID;
         public int NUM;
         public String DRIVER;
+        public String SN;
 
         public PortInfo() {
             VID = -1;
             PID = -1;
             NUM = -1;
             DRIVER = null;
+            SN = null;
         }
-        public PortInfo(int vid, int pid, int num, String driver) {
+
+        public PortInfo(int vid, int pid, int num, String driver, String sn) {
             VID = vid;
             PID = pid;
             NUM = num;
             DRIVER = driver;
+            SN = sn;
         }
 
         @NonNull
         @Override
         public String toString() {
-            return String.format("Vendor: %04X, Product: %04X, Port: %d, Driver: %s", VID, PID, NUM, DRIVER);
+            return String.format("Vendor: %04X, Product: %04X, Port: %d, Driver: %s, SN: %s", VID, PID, NUM, DRIVER, SN);
         }
     }
 }
