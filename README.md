@@ -1,6 +1,6 @@
 [![Actions Status](https://github.com/mik3y/usb-serial-for-android/workflows/build/badge.svg)](https://github.com/mik3y/usb-serial-for-android/actions)
 [![Jitpack](https://jitpack.io/v/mik3y/usb-serial-for-android.svg)](https://jitpack.io/#mik3y/usb-serial-for-android)
-[![Codacy](https://app.codacy.com/project/badge/Grade/ef799bba8a7343818af0a90eba3ecb46)](https://www.codacy.com/gh/kai-morich/usb-serial-for-android-mik3y/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kai-morich/usb-serial-for-android-mik3y&amp;utm_campaign=Badge_Grade)
+[![Codacy](https://app.codacy.com/project/badge/Grade/ef799bba8a7343818af0a90eba3ecb46)](https://app.codacy.com/gh/kai-morich/usb-serial-for-android-mik3y/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codecov](https://codecov.io/gh/mik3y/usb-serial-for-android/branch/master/graph/badge.svg)](https://codecov.io/gh/mik3y/usb-serial-for-android)
 
 # usb-serial-for-android
@@ -26,10 +26,26 @@ allprojects {
     }
 }
 ```
+
+Starting with gradle 6.8 you can alternatively add jitpack.io repository to your settings.gradle:
+```gradle
+dependencyResolutionManagement {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+If using gradle kotlin  use line
+```gradle.kts
+        maven(url = "https://jitpack.io")
+```
+
 Add library to dependencies
 ```gradle
 dependencies {
-    implementation 'com.github.mik3y:usb-serial-for-android:3.4.3'
+    implementation 'com.github.mik3y:usb-serial-for-android:3.7.0'
 }
 ```
 
@@ -113,22 +129,23 @@ new device or for one using a custom VID/PID pair.
 UsbSerialProber is a class to help you find and instantiate compatible
 UsbSerialDrivers from the tree of connected UsbDevices.  Normally, you will use
 the default prober returned by ``UsbSerialProber.getDefaultProber()``, which
-uses the built-in list of well-known VIDs and PIDs that are supported by our
-drivers.
+uses USB interface types and the built-in list of well-known VIDs and PIDs that
+are supported by our drivers.
 
 To use your own set of rules, create and use a custom prober:
 
 ```java
-// Probe for our custom CDC devices, which use VID 0x1234
-// and PIDS 0x0001 and 0x0002.
+// Probe for our custom FTDI device, which use VID 0x1234 and PID 0x0001 and 0x0002.
 ProbeTable customTable = new ProbeTable();
-customTable.addProduct(0x1234, 0x0001, CdcAcmSerialDriver.class);
-customTable.addProduct(0x1234, 0x0002, CdcAcmSerialDriver.class);
+customTable.addProduct(0x1234, 0x0001, FtdiSerialDriver.class);
+customTable.addProduct(0x1234, 0x0002, FtdiSerialDriver.class);
 
 UsbSerialProber prober = new UsbSerialProber(customTable);
 List<UsbSerialDriver> drivers = prober.findAllDrivers(usbManager);
 // ...
 ```
+*Note*: as of v3.5.0 this library detects CDC devices by USB interface types instead of fixed VID+PID,
+so custom probers are typically not required any more for CDC devices.
 
 Of course, nothing requires you to use UsbSerialProber at all: you can
 instantiate driver classes directly if you know what you're doing; just supply
@@ -139,14 +156,18 @@ a compatible UsbDevice.
 This library supports USB to serial converter chips:
 * FTDI FT232R, FT232H, FT2232H, FT4232H, FT230X, FT231X, FT234XD
 * Prolific PL2303
-* Silabs CP2102 and all other CP210x
-* Qinheng CH340, CH341A
+* Silabs CP2102, CP210*
+* Qinheng CH340, CH341A, CH9102
 
-and devices implementing the CDC/ACM protocol like
+devices implementing the CDC/ACM protocol like
 * Arduino using ATmega32U4
 * Digispark using V-USB software USB
 * BBC micro:bit using ARM mbed DAPLink firmware
 * ...
+
+and some device specific drivers:
+* GsmModem devices, e.g. for Unisoc based Fibocom GSM modems
+* Chrome OS CCD (Closed Case Debugging)
 
 ## Help & Discussion
 

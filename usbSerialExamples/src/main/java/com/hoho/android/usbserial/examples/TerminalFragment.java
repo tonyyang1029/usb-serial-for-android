@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -211,7 +212,8 @@ public class TerminalFragment extends Fragment implements SerialInputOutputManag
         UsbDeviceConnection usbConnection = usbManager.openDevice(driver.getDevice());
         if(usbConnection == null && usbPermission == UsbPermission.Unknown && !usbManager.hasPermission(driver.getDevice())) {
             usbPermission = UsbPermission.Requested;
-            PendingIntent usbPermissionIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(INTENT_ACTION_GRANT_USB), 0);
+            int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_MUTABLE : 0;
+            PendingIntent usbPermissionIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(INTENT_ACTION_GRANT_USB), flags);
             usbManager.requestPermission(driver.getDevice(), usbPermissionIntent);
             return;
         }
@@ -225,7 +227,11 @@ public class TerminalFragment extends Fragment implements SerialInputOutputManag
 
         try {
             usbSerialPort.open(usbConnection);
-            usbSerialPort.setParameters(baudRate, 8, 1, UsbSerialPort.PARITY_NONE);
+            try{
+                usbSerialPort.setParameters(baudRate, 8, 1, UsbSerialPort.PARITY_NONE);
+            }catch (UnsupportedOperationException e){
+                status("unsupport setparameters");
+            }
             if(withIoManager) {
                 usbIoManager = new SerialInputOutputManager(usbSerialPort, this);
                 usbIoManager.start();
@@ -349,7 +355,7 @@ public class TerminalFragment extends Fragment implements SerialInputOutputManag
                 cdBtn.setChecked(controlLines.contains(UsbSerialPort.ControlLine.CD));
                 riBtn.setChecked(controlLines.contains(UsbSerialPort.ControlLine.RI));
                 mainLooper.postDelayed(runnable, refreshInterval);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 status("getControlLines() failed: " + e.getMessage() + " -> stopped control line refresh");
             }
         }
@@ -366,8 +372,15 @@ public class TerminalFragment extends Fragment implements SerialInputOutputManag
                 if (!controlLines.contains(UsbSerialPort.ControlLine.CD))   cdBtn.setVisibility(View.INVISIBLE);
                 if (!controlLines.contains(UsbSerialPort.ControlLine.RI))   riBtn.setVisibility(View.INVISIBLE);
                 run();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Toast.makeText(getActivity(), "getSupportedControlLines() failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                rtsBtn.setVisibility(View.INVISIBLE);
+                ctsBtn.setVisibility(View.INVISIBLE);
+                dtrBtn.setVisibility(View.INVISIBLE);
+                dsrBtn.setVisibility(View.INVISIBLE);
+                cdBtn.setVisibility(View.INVISIBLE);
+                cdBtn.setVisibility(View.INVISIBLE);
+                riBtn.setVisibility(View.INVISIBLE);
             }
         }
 
