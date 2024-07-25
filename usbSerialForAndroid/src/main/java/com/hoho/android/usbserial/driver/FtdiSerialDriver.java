@@ -64,6 +64,7 @@ public class FtdiSerialDriver implements UsbSerialDriver {
 
         private static final int RESET_REQUEST = 0;
         private static final int MODEM_CONTROL_REQUEST = 1;
+        private static final int SET_FLOW_CONTROL_REQUEST = 2;
         private static final int SET_BAUD_RATE_REQUEST = 3;
         private static final int SET_DATA_REQUEST = 4;
         private static final int GET_MODEM_STATUS_REQUEST = 5;
@@ -120,6 +121,7 @@ public class FtdiSerialDriver implements UsbSerialDriver {
             if (result != 0) {
                 throw new IOException("Init RTS,DTR failed: result=" + result);
             }
+            setFlowControl(mFlowControl);
 
             // mDevice.getVersion() would require API 23
             byte[] rawDescriptors = mConnection.getRawDescriptors();
@@ -165,8 +167,8 @@ public class FtdiSerialDriver implements UsbSerialDriver {
                 do {
                     nread = super.read(dest, length, Math.max(1, (int)(endTime - MonotonicClock.millis())), false);
                 } while (nread == READ_HEADER_LENGTH && MonotonicClock.millis() < endTime);
-                if(nread <= 0 && MonotonicClock.millis() < endTime)
-                    testConnection();
+                if(nread <= 0)
+                    testConnection(MonotonicClock.millis() < endTime);
             } else {
                 do {
                     nread = super.read(dest, length, timeout);
@@ -303,7 +305,7 @@ public class FtdiSerialDriver implements UsbSerialDriver {
             byte[] data = new byte[2];
             int result = mConnection.controlTransfer(REQTYPE_DEVICE_TO_HOST, GET_MODEM_STATUS_REQUEST,
                     0, mPortNumber+1, data, data.length, USB_WRITE_TIMEOUT_MILLIS);
-            if (result != 2) {
+            if (result != data.length) {
                 throw new IOException("Get modem status failed: result=" + result);
             }
             return data[0];
@@ -378,6 +380,38 @@ public class FtdiSerialDriver implements UsbSerialDriver {
         }
 
         @Override
+        public void setFlowControl(FlowControl flowControl) throws IOException {
+            int value = 0;
+            int index = mPortNumber+1;
+            switch (flowControl) {
+                case NONE:
+                    break;
+                case RTS_CTS:
+                    index |= 0x100;
+                    break;
+                case DTR_DSR:
+                    index |= 0x200;
+                    break;
+                case XON_XOFF_INLINE:
+                    value = CHAR_XON + (CHAR_XOFF << 8);
+                    index |= 0x400;
+                    break;
+                default:
+                    throw new UnsupportedOperationException();
+            }
+            int result = mConnection.controlTransfer(REQTYPE_HOST_TO_DEVICE, SET_FLOW_CONTROL_REQUEST,
+                    value, index, null, 0, USB_WRITE_TIMEOUT_MILLIS);
+            if (result != 0)
+                throw new IOException("Set flow control failed: result=" + result);
+            mFlowControl = flowControl;
+        }
+
+        @Override
+        public EnumSet<FlowControl> getSupportedFlowControl() {
+            return EnumSet.of(FlowControl.NONE, FlowControl.RTS_CTS, FlowControl.DTR_DSR, FlowControl.XON_XOFF_INLINE);
+        }
+
+        @Override
         public void purgeHwBuffers(boolean purgeWriteBuffers, boolean purgeReadBuffers) throws IOException {
             if (purgeWriteBuffers) {
                 int result = mConnection.controlTransfer(REQTYPE_HOST_TO_DEVICE, RESET_REQUEST,
@@ -419,7 +453,7 @@ public class FtdiSerialDriver implements UsbSerialDriver {
             byte[] data = new byte[1];
             int result = mConnection.controlTransfer(REQTYPE_DEVICE_TO_HOST, GET_LATENCY_TIMER_REQUEST,
                     0, mPortNumber+1, data, data.length, USB_WRITE_TIMEOUT_MILLIS);
-            if (result != 1) {
+            if (result != data.length) {
                 throw new IOException("Get latency timer failed: result=" + result);
             }
             return data[0];

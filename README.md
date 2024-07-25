@@ -45,7 +45,7 @@ If using gradle kotlin  use line
 Add library to dependencies
 ```gradle
 dependencies {
-    implementation 'com.github.mik3y:usb-serial-for-android:3.7.0'
+    implementation 'com.github.mik3y:usb-serial-for-android:3.8.0'
 }
 ```
 
@@ -115,9 +115,10 @@ For a simple example, see
 [UsbSerialExamples](https://github.com/mik3y/usb-serial-for-android/blob/master/usbSerialExamples)
 folder in this project.
 
-For a more complete example with background service to stay connected while
-the app is not visible or rotating, see separate github project 
-[SimpleUsbTerminal](https://github.com/kai-morich/SimpleUsbTerminal).
+See separate github project [SimpleUsbTerminal](https://github.com/kai-morich/SimpleUsbTerminal) 
+for a more complete example with:
+* Background service to stay connected while the app is not visible or rotating
+* Flow control 
 
 ## Probing for Unrecognized Devices
 
